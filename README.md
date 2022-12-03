@@ -1,6 +1,6 @@
 # Strategic Test Suite
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chess-sts.streamlit.app/Positions) 
-[![Python 3.9](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chess-sts.streamlit.app/Positions)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
 The [official site](https://sites.google.com/site/strategictestsuite/) contains the complete positions as well as descriptions of each strategy.
 
