@@ -6,11 +6,13 @@ import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 import chess.pgn
+from gsheetsdb import connect
 
 from modules.config import Config
 from modules.positions import Positions
 
 
+conn = connect()
 myconfig = Config()
 mypos = Positions()
 
@@ -23,27 +25,37 @@ def get_df(fn):
     return pd.read_csv(fn)
 
 
+# Perform SQL query on the Google Sheet.
+@st.experimental_singleton
+def run_query(query):
+    rows = conn.execute(query, headers=1)
+    rows = rows.fetchall()
+    return rows
+
+
 def main():
     myconfig.add_logo()
 
     radio_var = st.sidebar.radio(label='', options=['All', 'Reviewed', 'Not yet Reviewed'])
 
-    table_fn = './data/sts_positions - stockfish 15.csv'
+    sheet_url = st.secrets["public_gsheets_url"]
+    rows = run_query(f'SELECT * FROM "{sheet_url}"')
+
     analysis_fn = './data/current_analysis.csv'
 
-    df = get_df(table_fn)
+    df = pd.DataFrame(rows)
     df_analysis = get_df(analysis_fn)
 
-    df1 = df[['index', 'epd', 'old bm', 'old id', 'new id',
-              'comment', 'Reviewed by', 'Replace']]
+    df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
+              'comment', 'Reviewed_by', 'Replace']]
 
     if radio_var == 'All':
         grid_table = mypos.get_aggrid_table(df1, 250)
     elif radio_var == 'Reviewed':
-        df1 = df1.loc[~df1['Reviewed by'].isna()]
+        df1 = df1.loc[~df1['Reviewed_by'].isna()]
         grid_table = mypos.get_aggrid_table(df1, 250)
     else:
-        df1 = df1.loc[df1['Reviewed by'].isna()]
+        df1 = df1.loc[df1['Reviewed_by'].isna()]
         grid_table = mypos.get_aggrid_table(df1, 250)
 
     selected_row = grid_table["selected_rows"]
@@ -52,7 +64,7 @@ def main():
 
     if selected_row:
         epd = selected_row[0]['epd']
-        test_id = selected_row[0]['old id']
+        test_id = selected_row[0]['old_id']
         board = chess.Board(epd)
 
         # Show top analysis from epd.
