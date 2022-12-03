@@ -14,3 +14,7 @@ Open terminal like powershell and copy the whole repository to your drive with g
 * cd strategic-test-suite
 * pip install -r requirements.xt
 * streamlit run 01_🏠_Home.py
+
+### Run from web
+
+* Visit https://chess-sts.streamlit.app/Positions
