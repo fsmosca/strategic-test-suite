@@ -8,7 +8,9 @@ The [official site](https://sites.google.com/site/strategictestsuite/) contains 
 
 ### Run locally
 
-* git clone `https://github.com/fsmosca/strategic-test-suite.git` from command line
+Open terminal like powershell and copy the whole repository to your drive with git clone.
+
+* git clone `https://github.com/fsmosca/strategic-test-suite.git`
 * cd strategic-test-suite
 * pip install -r requirements.xt
 * streamlit run 01_🏠_Home.py
