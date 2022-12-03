@@ -33,10 +33,18 @@ def run_query(query):
     return rows
 
 
+def clear_table_cache():
+    run_query.clear()
+
+
 def main():
     myconfig.add_logo()
 
-    radio_var = st.sidebar.radio(label='', options=['All', 'Reviewed', 'Not yet Reviewed'])
+    with st.sidebar.expander('Select Table', expanded=True):
+        radio_var = st.radio(label='Filtered Table', options=['All', 'Reviewed', 'Not yet Reviewed'])
+
+    with st.sidebar.expander('Update Table'):
+        st.button('Clear Cache', on_click=clear_table_cache)
 
     sheet_url = st.secrets["public_gsheets_url"]
     rows = run_query(f'SELECT * FROM "{sheet_url}"')
