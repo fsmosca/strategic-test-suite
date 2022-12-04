@@ -1,6 +1,6 @@
 # Strategic Test Suite
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://chess-sts.streamlit.app/Positions)
-[![Python 3.7](https://img.shields.io/badge/Python-%203.7%20%7C%203.8%20%7C%203.9%20-cyan.svg)](https://www.python.org/downloads/release/python-370/)
+[![Python 3.8](https://img.shields.io/badge/Python-%203.8%20%7C%203.9%20-cyan.svg)](https://www.python.org/downloads/release/python-380/)
 
 The [official site](https://sites.google.com/site/strategictestsuite/) contains the complete positions as well as descriptions of each strategy.
 
@@ -8,7 +8,7 @@ The [official site](https://sites.google.com/site/strategictestsuite/) contains 
 
 ### Run locally
 
-Use Python **3.7 to 3.9**
+Use Python **3.8 to 3.9**
 
 Open terminal like powershell and copy the whole repository to your drive with git clone.
 
