@@ -18,17 +18,21 @@ from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
 st.session_state.update(st.session_state)
 
 
-# Session states
+# Define session states.
+if 'myconfig' not in st.session_state:
+    st.session_state.myconfig = Config()  # instantiate class
+
+if 'mypos' not in st.session_state:
+    st.session_state.mypos = Positions() # instantiate class
+
 if 'conn' not in st.session_state:
-    st.session_state.conn = connect()
+    st.session_state.conn = connect()  # instantiate class
+
 if 'board_size_k' not in st.session_state:
     st.session_state.board_size_k = BOARD_DEFAULT_VALUE
 
 
-myconfig = Config()
-mypos = Positions()
-
-myconfig.set_config()
+st.session_state.myconfig.set_config()
 # st.markdown(myconfig.hide_menu(), unsafe_allow_html=True)
 
 
@@ -42,7 +46,7 @@ def clear_table_cache():
 
 
 def main():
-    myconfig.add_logo()
+    st.session_state.myconfig.add_logo()
 
     with st.sidebar.expander('Select Table', expanded=True):
         radio_var = st.radio(
@@ -74,13 +78,13 @@ def main():
               'comment', 'Reviewed_by', 'Replace']]
 
     if radio_var == 'All':
-        grid_table = mypos.get_aggrid_table(df1, 250)
+        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
     elif radio_var == 'Reviewed':
         df1 = df1.loc[~df1['Reviewed_by'].isna()]
-        grid_table = mypos.get_aggrid_table(df1, 250)
+        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
     else:
         df1 = df1.loc[df1['Reviewed_by'].isna()]
-        grid_table = mypos.get_aggrid_table(df1, 250)
+        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
 
     selected_row = grid_table["selected_rows"]
 
@@ -98,7 +102,8 @@ def main():
 
             df_latest_analysis_1 = df_latest_analysis_1.drop(
                 ['epd', 'move'], axis=1)
-            grid_table_2 = mypos.get_aggrid_table(df_latest_analysis_1, 350)
+            grid_table_2 = st.session_state.mypos.get_aggrid_table(
+                df_latest_analysis_1, 350)
 
             selected_row_2 = grid_table_2["selected_rows"]
             if selected_row_2:
@@ -122,7 +127,7 @@ def main():
                 width = st.session_state.board_size_k + 200
                 height = st.session_state.board_size_k + 20
                 components.html(
-                    mypos.tempo_html_string(game, board.turn),
+                    st.session_state.mypos.tempo_html_string(game, board.turn),
                     width=width,
                     height=height,
                     scrolling=True)
