@@ -1,5 +1,5 @@
 streamlit
 pandas
 chess==1.9.3
-streamlit-aggrid==0.3.3
+streamlit-aggrid==0.3.2
 gsheetsdb==0.1.13.1
