@@ -14,7 +14,7 @@ class Positions:
     def get_aggrid_table(self, df, height=300, use_box=True):
         """Displays df using aggrid."""
         gd = GridOptionsBuilder.from_dataframe(df)
-        gd.configure_default_column(min_column_width=0, editable=True, groupable=True)
+        gd.configure_default_column(min_column_width=0, editable=True, groupable=False)
         gd.configure_selection(
             selection_mode='single', use_checkbox=use_box, pre_selected_rows=[0],
             suppressRowDeselection=True)
