@@ -36,7 +36,7 @@ class Positions:
         rel="stylesheet" crossorigin>
         </head>
         <body>
-        <ct-pgn-viewer board-size=250px move-list-folding=false
+        <ct-pgn-viewer board-size={st.session_state.board_size_k}px move-list-folding=false
             move-list-resizable=false board-resizable=false move-list-position=right board-coords-style=internal
             buttons-above-moves=true flip={"false" if turn else "true"}>
         {game}
