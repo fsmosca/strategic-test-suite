@@ -10,9 +10,20 @@ from gsheetsdb import connect
 
 from modules.config import Config
 from modules.positions import Positions, run_query
+from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
+                               BOARD_DEFAULT_VALUE, BOARD_DEFAULT_VALUE,
+                               BOARD_STEP)
 
+
+# Updates the state variables on all modules.
+st.session_state.update(st.session_state)
+
+
+# Session states
 if 'conn' not in st.session_state:
     st.session_state.conn = connect()
+if 'board_size_k' not in st.session_state:
+    st.session_state.board_size_k = BOARD_DEFAULT_VALUE
 
 
 myconfig = Config()
@@ -40,6 +51,16 @@ def main():
     with st.sidebar.expander('Update Table'):
         st.button('Clear Cache', on_click=clear_table_cache)
 
+    with st.sidebar.expander('Board Size', expanded=False):
+        def_board_size = st.session_state.board_size_k
+        st.number_input(
+            label='Adjust board size',
+            min_value=BOARD_MIN_VALUE,
+            max_value=BOARD_MAX_VALUE,
+            value=def_board_size,
+            step=BOARD_STEP,
+            key='board_size_k')
+
     sheet_url = st.secrets["public_gsheets_url"]
     rows = run_query(f'SELECT * FROM "{sheet_url}"')
 
@@ -49,7 +70,7 @@ def main():
     df_analysis = get_df(analysis_fn)
 
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
-              'comment', 'Reviewed_by', 'Replace']]
+                'comment', 'Reviewed_by', 'Replace']]
 
     if radio_var == 'All':
         grid_table = mypos.get_aggrid_table(df1, 250)
@@ -96,10 +117,12 @@ def main():
                     node = node.add_main_variation(chess.Move.from_uci(m))
 
             with st.container():
+                width = st.session_state.board_size_k + 200
+                height = st.session_state.board_size_k + 20
                 components.html(
                     mypos.tempo_html_string(game, board.turn),
-                    width=450,
-                    height=270,
+                    width=width,
+                    height=height,
                     scrolling=True)
 
                 epd_stdev = None
@@ -110,7 +133,7 @@ def main():
                 Theme: **{test_id}**  
                 Eval stdev: **{int(round(epd_stdev, 0)) if epd_stdev is not None else None}**
                 ''')
-    
+
 
 if __name__ == '__main__':
     main()
