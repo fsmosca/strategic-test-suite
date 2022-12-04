@@ -69,14 +69,13 @@ def main():
               'comment', 'Reviewed_by', 'Replace']]
 
     if radio_var == 'All':
-        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
+        pass
     elif radio_var == 'Reviewed':
         df1 = df1.loc[~df1['Reviewed_by'].isna()]
-        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
     else:
         df1 = df1.loc[df1['Reviewed_by'].isna()]
-        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
 
+    grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
     selected_row = grid_table["selected_rows"]
 
     cols = st.columns([1, 1])
