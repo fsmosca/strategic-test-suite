@@ -31,7 +31,7 @@ class Config:
             """
             <style>
                 [data-testid="stSidebarNav"] {
-                    background-image: url(https://lh4.googleusercontent.com/vtzDjXM6oK90eR3KkwpcUls89dvppljcSKxSAAsg3YCRQOIhGiC3WDEZYefPcMvH-HtG2Q=w16383);
+                    background-image: url(https://i.imgur.com/3D98J1X.png);
                     background-repeat: no-repeat;
                     padding-top: 10px;
                     background-position: 20px 20px;
