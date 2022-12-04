@@ -1,3 +1,8 @@
+"""Handles functionalities in pages/positions.py.
+"""
+
+
+import streamlit as st
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 
@@ -39,3 +44,11 @@ class Positions:
         </body>
         '''
         return html_string
+
+
+@st.experimental_singleton
+def run_query(query):
+    """Perform SQL query on the Google Sheet."""
+    rows = st.session_state.conn.execute(query, headers=1)
+    rows = rows.fetchall()
+    return rows
