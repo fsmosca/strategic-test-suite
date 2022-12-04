@@ -5,7 +5,6 @@
 import streamlit as st
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
-from st_aggrid.shared import ColumnsAutoSizeMode, AgGridTheme
 import pandas as pd
 
 
@@ -24,10 +23,7 @@ class Positions:
         gridoptions = gd.build()
         grid_table = AgGrid(
             df, height=height, gridOptions=gridoptions,
-            enable_enterprise_modules=False,
-            columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
-            theme=AgGridTheme.ALPINE,
-            update_on=['cellValueChanged'])
+            enable_enterprise_modules=False)
         return grid_table
 
     def tempo_html_string(self, game, turn):
