@@ -9,7 +9,7 @@ import chess.pgn
 from gsheetsdb import connect
 
 from modules.config import Config
-from modules.positions import Positions, run_query
+from modules.positions import Positions, run_query, get_df, clear_table_cache
 from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
                                BOARD_DEFAULT_VALUE, BOARD_STEP)
 
@@ -34,15 +34,6 @@ if 'board_size_k' not in st.session_state:
 
 st.session_state.myconfig.set_config()
 # st.markdown(myconfig.hide_menu(), unsafe_allow_html=True)
-
-
-@st.experimental_memo
-def get_df(fn):
-    return pd.read_csv(fn)
-
-
-def clear_table_cache():
-    run_query.clear()
 
 
 def main():
