@@ -11,8 +11,7 @@ from gsheetsdb import connect
 from modules.config import Config
 from modules.positions import Positions, run_query
 from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
-                               BOARD_DEFAULT_VALUE, BOARD_DEFAULT_VALUE,
-                               BOARD_STEP)
+                               BOARD_DEFAULT_VALUE, BOARD_STEP)
 
 
 # Updates the state variables on all modules.
@@ -46,7 +45,9 @@ def main():
     myconfig.add_logo()
 
     with st.sidebar.expander('Select Table', expanded=True):
-        radio_var = st.radio(label='Filtered Table', options=['All', 'Reviewed', 'Not yet Reviewed'])
+        radio_var = st.radio(
+            label='Filtered Table',
+            options=['All', 'Reviewed', 'Not yet Reviewed'])
 
     with st.sidebar.expander('Update Table'):
         st.button('Clear Cache', on_click=clear_table_cache)
@@ -70,7 +71,7 @@ def main():
     df_analysis = get_df(analysis_fn)
 
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
-                'comment', 'Reviewed_by', 'Replace']]
+              'comment', 'Reviewed_by', 'Replace']]
 
     if radio_var == 'All':
         grid_table = mypos.get_aggrid_table(df1, 250)
@@ -95,7 +96,8 @@ def main():
             st.write('#### New analysis')
             df_latest_analysis_1 = df_analysis.loc[df_analysis['epd'] == epd]
 
-            df_latest_analysis_1 = df_latest_analysis_1.drop(['epd', 'move'], axis=1)
+            df_latest_analysis_1 = df_latest_analysis_1.drop(
+                ['epd', 'move'], axis=1)
             grid_table_2 = mypos.get_aggrid_table(df_latest_analysis_1, 350)
 
             selected_row_2 = grid_table_2["selected_rows"]
@@ -128,10 +130,11 @@ def main():
                 epd_stdev = None
                 if len(df_latest_analysis_1):
                     epd_stdev = df_latest_analysis_1['eval'].std()
+                    epd_stdev = int(round(epd_stdev, 0))
 
                 st.markdown(f'''
                 Theme: **{test_id}**  
-                Eval stdev: **{int(round(epd_stdev, 0)) if epd_stdev is not None else None}**
+                Eval stdev: **{epd_stdev}**
                 ''')
 
 
