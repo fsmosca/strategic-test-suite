@@ -9,10 +9,12 @@ import chess.pgn
 from gsheetsdb import connect
 
 from modules.config import Config
-from modules.positions import Positions
+from modules.positions import Positions, run_query
+
+if 'conn' not in st.session_state:
+    st.session_state.conn = connect()
 
 
-conn = connect()
 myconfig = Config()
 mypos = Positions()
 
@@ -23,14 +25,6 @@ myconfig.set_config()
 @st.experimental_memo
 def get_df(fn):
     return pd.read_csv(fn)
-
-
-# Perform SQL query on the Google Sheet.
-@st.experimental_singleton
-def run_query(query):
-    rows = conn.execute(query, headers=1)
-    rows = rows.fetchall()
-    return rows
 
 
 def clear_table_cache():
