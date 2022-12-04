@@ -1,5 +1,11 @@
+# [theme]
+# base="light"
+# backgroundColor="#cfdbf1"
+# secondaryBackgroundColor="#c3cfe6"
+# font="serif"
+
 [theme]
 base="light"
-backgroundColor="#cfdbf1"
-secondaryBackgroundColor="#c3cfe6"
+backgroundColor="#e4ecec"
+secondaryBackgroundColor="#dfe6e8"
 font="serif"
