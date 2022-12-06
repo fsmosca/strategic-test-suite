@@ -4,8 +4,13 @@
 # secondaryBackgroundColor="#c3cfe6"
 # font="serif"
 
+# [theme]
+# base="light"
+# backgroundColor="#e4ecec"
+# secondaryBackgroundColor="#dfe6e8"
+# font="serif"
+
 [theme]
-base="light"
-backgroundColor="#e4ecec"
-secondaryBackgroundColor="#dfe6e8"
-font="serif"
+base="dark"
+backgroundColor="#0b3146"
+secondaryBackgroundColor="#062739"
