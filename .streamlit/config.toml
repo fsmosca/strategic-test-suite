@@ -10,7 +10,14 @@
 # secondaryBackgroundColor="#dfe6e8"
 # font="serif"
 
+# [theme]
+# base="dark"
+# backgroundColor="#0b3146"
+# secondaryBackgroundColor="#062739"
+
 [theme]
 base="dark"
 backgroundColor="#0b3146"
 secondaryBackgroundColor="#062739"
+font="serif"
+
