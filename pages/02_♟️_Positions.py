@@ -45,7 +45,7 @@ def main():
             options=['All', 'Reviewed', 'Not yet Reviewed'])
 
     with st.sidebar.expander('Update Table'):
-        st.button('Clear Cache', on_click=clear_table_cache)
+        st.button('Update data', on_click=clear_table_cache, help='Pull new data from google sheet.')
 
     with st.sidebar.expander('Board Size', expanded=False):
         def_board_size = st.session_state.board_size_k
@@ -139,8 +139,12 @@ def main():
                     ''')
 
     with tab2:
-        data_hw = [['unix', 'AMD 5950x 32t 16gb hash'], ['ferdy', 'i7-2600 4t 512mb hash']]
+        data_hw = [['unix', 'AMD Ryzen 9 5950x, 16 cores / 32 threads'],
+                   ['ferdy', 'i7-2600 4 cores / 8 threads'],
+                   ['criko', 'AMD Ryzen Threadripper PRO 3995WX, 64 core / 128 threads']]
         df_hw = pd.DataFrame(data_hw, columns = ['username', 'analysis setting'])
+        df_hw = df_hw.sort_values(by=['username'], ascending=[True])
+        df_hw = df_hw.reset_index(drop=True)
         st.dataframe(df_hw)
 
 
