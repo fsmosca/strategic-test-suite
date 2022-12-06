@@ -66,71 +66,82 @@ def main():
     df_analysis = get_df(analysis_fn)
 
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
-              'comment', 'Reviewed_by', 'Replace']]
+              'comment', 'Reviewed_by', 'Replace', 'Duplicate',
+              'unix_sec', 'ferdy_sec']]
 
-    if radio_var == 'All':
-        pass
-    elif radio_var == 'Reviewed':
-        df1 = df1.loc[~df1['Reviewed_by'].isna()]
-    else:
-        df1 = df1.loc[df1['Reviewed_by'].isna()]
+    # Create 2 tabs, Data and Analysis hardware.
+    tab1, tab2 = st.tabs(['Data', 'Analysis HW'])
 
-    grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
-    selected_row = grid_table["selected_rows"]
+    with tab1:
 
-    cols = st.columns([1, 1])
+        if radio_var == 'All':
+            pass
+        elif radio_var == 'Reviewed':
+            df1 = df1.loc[~df1['Reviewed_by'].isna()]
+        else:
+            df1 = df1.loc[df1['Reviewed_by'].isna()]
 
-    if selected_row:
-        epd = selected_row[0]['epd']
-        test_id = selected_row[0]['old_id']
-        board = chess.Board(epd)
+        grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
+        selected_row = grid_table["selected_rows"]
 
-        # Show top analysis from epd.
-        with cols[1]:
-            st.write('#### New analysis')
-            df_latest_analysis_1 = df_analysis.loc[df_analysis['epd'] == epd]
+        cols = st.columns([1, 1])
 
-            df_latest_analysis_1 = df_latest_analysis_1.drop(
-                ['epd', 'move'], axis=1)
-            grid_table_2 = st.session_state.mypos.get_aggrid_table(
-                df_latest_analysis_1, 350)
+        if selected_row:
+            epd = selected_row[0]['epd']
+            test_id = selected_row[0]['old_id']
+            board = chess.Board(epd)
 
-            selected_row_2 = grid_table_2["selected_rows"]
-            if selected_row_2:
-                pv2 = selected_row_2[0]['pv']
+            # Show top analysis from epd.
+            with cols[1]:
+                st.write('#### New analysis')
+                df_latest_analysis_1 = df_analysis.loc[df_analysis['epd'] == epd]
 
-        # Show board.
-        with cols[0]:
-            st.write('#### Board from analysis line')
+                df_latest_analysis_1 = df_latest_analysis_1.drop(
+                    ['epd', 'move'], axis=1)
+                grid_table_2 = st.session_state.mypos.get_aggrid_table(
+                    df_latest_analysis_1, 350)
 
-            fen = board.fen()
-            game = chess.pgn.Game()
-            game.headers["Result"] = '*'
-            game.headers["FEN"] = fen
+                selected_row_2 = grid_table_2["selected_rows"]
+                if selected_row_2:
+                    pv2 = selected_row_2[0]['pv']
 
-            if len(df_latest_analysis_1) and len(selected_row_2):
-                node = game
-                for m in pv2.split():
-                    node = node.add_main_variation(chess.Move.from_uci(m))
+            # Show board.
+            with cols[0]:
+                st.write('#### Board from analysis line')
 
-            with st.container():
-                width = st.session_state.board_size_k + 200
-                height = st.session_state.board_size_k + 20
-                components.html(
-                    st.session_state.mypos.tempo_html_string(game, board.turn),
-                    width=width,
-                    height=height,
-                    scrolling=True)
+                fen = board.fen()
+                game = chess.pgn.Game()
+                game.headers["Result"] = '*'
+                game.headers["FEN"] = fen
 
-                epd_stdev = None
-                if len(df_latest_analysis_1):
-                    epd_stdev = df_latest_analysis_1['eval'].std()
-                    epd_stdev = int(round(epd_stdev, 0))
+                if len(df_latest_analysis_1) and len(selected_row_2):
+                    node = game
+                    for m in pv2.split():
+                        node = node.add_main_variation(chess.Move.from_uci(m))
 
-                st.markdown(f'''
-                Theme: **{test_id}**  
-                Eval stdev: **{epd_stdev}**
-                ''')
+                with st.container():
+                    width = st.session_state.board_size_k + 200
+                    height = st.session_state.board_size_k + 20
+                    components.html(
+                        st.session_state.mypos.tempo_html_string(game, board.turn),
+                        width=width,
+                        height=height,
+                        scrolling=True)
+
+                    epd_stdev = None
+                    if len(df_latest_analysis_1):
+                        epd_stdev = df_latest_analysis_1['eval'].std()
+                        epd_stdev = int(round(epd_stdev, 0))
+
+                    st.markdown(f'''
+                    Theme: **{test_id}**  
+                    Eval stdev: **{epd_stdev}**
+                    ''')
+
+    with tab2:
+        data_hw = [['unix', 'AMD 5950x 32t 16gb hash'], ['ferdy', 'i7-2600 4t 512mb hash']]
+        df_hw = pd.DataFrame(data_hw, columns = ['username', 'analysis setting'])
+        st.dataframe(df_hw)
 
 
 if __name__ == '__main__':
