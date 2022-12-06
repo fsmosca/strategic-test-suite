@@ -23,6 +23,7 @@ class Positions:
         gridoptions = gd.build()
         grid_table = AgGrid(
             df, height=height, gridOptions=gridoptions,
+            theme='streamlit',
             enable_enterprise_modules=False)
         return grid_table
 
