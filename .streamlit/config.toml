@@ -15,9 +15,15 @@
 # backgroundColor="#0b3146"
 # secondaryBackgroundColor="#062739"
 
-[theme]
-base="dark"
-backgroundColor="#0b3146"
-secondaryBackgroundColor="#062739"
-font="serif"
+# [theme]
+# base="dark"
+# backgroundColor="#0b3146"
+# secondaryBackgroundColor="#062739"
+# font="serif"
 
+[theme]
+base="light"
+primaryColor="#da9ae2"
+backgroundColor="#eed7ef"
+secondaryBackgroundColor="#c1cee2"
+font="serif"
