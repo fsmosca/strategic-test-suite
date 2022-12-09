@@ -6,6 +6,7 @@ import streamlit as st
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 import pandas as pd
+from shillelagh.backends.apsw.db import connect
 
 
 class Positions:
@@ -53,9 +54,16 @@ class Positions:
 @st.experimental_singleton
 def run_query(query):
     """Perform SQL query on the Google Sheet."""
-    rows = st.session_state.conn.execute(query, headers=1)
-    rows = rows.fetchall()
-    return rows
+    cursor = st.session_state.conn.cursor()
+    rows = cursor.execute(query)
+    df = pd.DataFrame(rows)
+    df.columns = ['index', 'epd', 'old_bm', 'sts_v6', 'old_id', 'new_id', 'test', 
+              'depth', 'by', 'status', 'date', 'output_file', 'updated_by',
+              'update_date', 'update_depth', 'epd_index_check', 'comment',
+              'Reviewed_by', 'Replace', 'Duplicate',
+              'unix_sec', 'ferdy_sec']
+    
+    return df
 
 
 @st.experimental_memo

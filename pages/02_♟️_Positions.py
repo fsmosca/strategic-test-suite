@@ -6,7 +6,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 import chess.pgn
-from gsheetsdb import connect
+from shillelagh.backends.apsw.db import connect
 
 from modules.config import Config
 from modules.positions import Positions, run_query, get_df, clear_table_cache
@@ -26,7 +26,7 @@ if 'mypos' not in st.session_state:
     st.session_state.mypos = Positions() # instantiate class
 
 if 'conn' not in st.session_state:
-    st.session_state.conn = connect()  # instantiate class
+    st.session_state.conn = connect(":memory:")
 
 if 'board_size_k' not in st.session_state:
     st.session_state.board_size_k = BOARD_DEFAULT_VALUE
@@ -58,11 +58,10 @@ def main():
             key='board_size_k')
 
     sheet_url = st.secrets["public_gsheets_url"]
-    rows = run_query(f'SELECT * FROM "{sheet_url}"')
+    query = f'SELECT * FROM "{sheet_url}"'
+    df = run_query(query)
 
     analysis_fn = './data/current_analysis.csv'
-
-    df = pd.DataFrame(rows)
     df_analysis = get_df(analysis_fn)
 
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
