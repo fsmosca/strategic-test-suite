@@ -73,3 +73,21 @@ def get_df(fn):
 
 def clear_table_cache():
     run_query.clear()
+
+
+def theme_names():
+    """Gets the dataframe of theme"""
+    themes = [['STS 01', 'Undermining'], ['STS 02', 'Open Files and Diagonals'],
+              ['STS 03', 'Knight Outposts'], ['STS 04', 'Square Vacancy'],
+              ['STS 05', 'Bishop vs Knight'], ['STS 06', 'Re-Capturing'],
+              ['STS 07', 'Offer of Simplification'], ['STS 08', 'Advancement of f/g/h Pawns'],
+              ['STS 09', 'Advancement of a/b/c Pawns'], ['STS 10', 'Simplification'],
+              ['STS 11', 'Activity of the King'], ['STS 12', 'Center Control'],
+              ['STS 13', 'Pawn Play in the Center'], ['STS 14', 'Queens and Rooks to the 7th rank'],
+              ['STS 15', 'Avoid Pointless Exchange']
+             ]
+    df = pd.DataFrame(themes)
+    df.columns = ['Id', 'Name']
+
+    return df
+    

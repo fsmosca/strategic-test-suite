@@ -9,7 +9,8 @@ import chess.pgn
 from shillelagh.backends.apsw.db import connect
 
 from modules.config import Config
-from modules.positions import Positions, run_query, get_df, clear_table_cache
+from modules.positions import (Positions, run_query, get_df,
+                               clear_table_cache, theme_names)
 from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
                                BOARD_DEFAULT_VALUE, BOARD_STEP)
 
@@ -69,7 +70,7 @@ def main():
               'unix_sec', 'ferdy_sec']]
 
     # Create 2 tabs, Data and Analysis hardware.
-    tab1, tab2 = st.tabs(['Data', 'Analysis HW'])
+    tab1, tab2, tab3 = st.tabs(['Data', 'Theme Names', 'Analysis HW'])
 
     with tab1:
 
@@ -138,6 +139,10 @@ def main():
                     ''')
 
     with tab2:
+        df_themes = theme_names()
+        st.dataframe(df_themes)
+
+    with tab3:
         data_hw = [['unix', 'AMD Ryzen 9 5950x, 16 cores / 32 threads'],
                    ['ferdy', 'i7-2600 4 cores / 8 threads'],
                    ['criko', 'AMD Ryzen Threadripper PRO 3995WX, 64 core / 128 threads']]
