@@ -145,12 +145,15 @@ def main():
                     Eval stdev: **{epd_stdev}**
                     ''')
 
-                with st.expander('Check Progress', expanded=False):
-                    fig = px.pie(prog_df, values='value', names='cat', title='Checking progress')
-                    fig.update_layout(
-                        margin=dict(l=20, r=20, t=30, b=0),
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
+        cols = st.columns([1, 1, 1])
+
+        with cols[0]:
+            with st.expander('Check Progress', expanded=False):
+                fig = px.pie(prog_df, values='value', names='cat', title='Checking progress',
+                             height=200, width=200)
+                fig.update_layout(
+                    margin=dict(l=20, r=20, t=30, b=0),)
+                st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
         df_themes = theme_names()
