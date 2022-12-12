@@ -7,6 +7,7 @@ import streamlit.components.v1 as components
 import pandas as pd
 import chess.pgn
 from shillelagh.backends.apsw.db import connect
+import plotly.express as px
 
 from modules.config import Config
 from modules.positions import (Positions, run_query, get_df,
@@ -69,8 +70,14 @@ def main():
               'comment', 'Reviewed_by', 'Replace', 'Duplicate',
               'unix_sec', 'ferdy_sec']]
 
-    # Create 2 tabs, Data and Analysis hardware.
+    # Create tabs
     tab1, tab2, tab3 = st.tabs(['Data', 'Theme Names', 'Analysis HW'])
+
+    # Data for pie chart.
+    check_count = len(df1.loc[~df1['Reviewed_by'].isna()])
+    not_check_count = len(df1.loc[df1['Reviewed_by'].isna()])
+    prog_df = pd.DataFrame({'cat': ['check', 'not check'],
+                            'value': [check_count, not_check_count]})
 
     with tab1:
 
@@ -137,6 +144,13 @@ def main():
                     Theme: **{test_id}**  
                     Eval stdev: **{epd_stdev}**
                     ''')
+
+                with st.expander('Check Progress', expanded=False):
+                    fig = px.pie(prog_df, values='value', names='cat', title='Checking progress')
+                    fig.update_layout(
+                        margin=dict(l=20, r=20, t=30, b=0),
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
         df_themes = theme_names()
