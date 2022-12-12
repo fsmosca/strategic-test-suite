@@ -4,3 +4,4 @@ chess==1.9.3
 streamlit-aggrid==0.3.2
 shillelagh==1.1.3
 shillelagh[all]
+plotly
