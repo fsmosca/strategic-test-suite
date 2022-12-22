@@ -63,8 +63,9 @@ def main():
     query = f'SELECT * FROM "{sheet_url}"'
     df = run_query(query)
 
-    analysis_fn = './data/current_analysis.csv'
-    df_analysis = get_df(analysis_fn)
+    sheet_analysis = st.secrets["public_sheets_analysis"]
+    query = f'SELECT * FROM "{sheet_analysis}"'
+    df_analysis = run_query(query)
 
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
               'comment', 'Reviewed_by', 'Replace', 'Duplicate',
