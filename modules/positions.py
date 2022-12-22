@@ -66,6 +66,17 @@ def run_query(query):
     return df
 
 
+@st.experimental_singleton
+def run_query_analysis(query):
+    """Perform SQL query on the Google Sheet."""
+    cursor = st.session_state.conn.cursor()
+    rows = cursor.execute(query)
+    df = pd.DataFrame(rows)
+    df.columns = ['epd','move','eval','depth','pv','engine']
+    
+    return df
+
+
 @st.experimental_memo
 def get_df(fn):
     return pd.read_csv(fn)
@@ -73,6 +84,7 @@ def get_df(fn):
 
 def clear_table_cache():
     run_query.clear()
+    run_query_analysis.clear()
 
 
 def theme_names():

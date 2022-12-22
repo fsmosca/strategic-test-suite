@@ -10,7 +10,7 @@ from shillelagh.backends.apsw.db import connect
 import plotly.express as px
 
 from modules.config import Config
-from modules.positions import (Positions, run_query, get_df,
+from modules.positions import (Positions, run_query, run_query_analysis,
                                clear_table_cache, theme_names)
 from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
                                BOARD_DEFAULT_VALUE, BOARD_STEP)
@@ -65,7 +65,7 @@ def main():
 
     sheet_analysis = st.secrets["public_sheets_analysis"]
     query = f'SELECT * FROM "{sheet_analysis}"'
-    df_analysis = run_query(query)
+    df_analysis = run_query_analysis(query)
 
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
               'comment', 'Reviewed_by', 'Replace', 'Duplicate',
