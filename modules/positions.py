@@ -17,7 +17,7 @@ class Positions:
         """Displays df using aggrid."""
         gd = GridOptionsBuilder.from_dataframe(df)
         gd.configure_default_column(
-            min_column_width=5, editable=True, groupable=False)
+            editable=True, groupable=False)
         gd.configure_selection(
             selection_mode='single', use_checkbox=use_box,
             pre_selected_rows=[0], suppressRowDeselection=True)
@@ -25,6 +25,7 @@ class Positions:
         grid_table = AgGrid(
             df, height=height, gridOptions=gridoptions,
             theme='streamlit',
+            fit_columns_on_grid_load=True,
             enable_enterprise_modules=False)
         return grid_table
 
