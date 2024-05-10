@@ -52,7 +52,7 @@ class Positions:
         return html_string
 
 
-@st.experimental_singleton
+@st.cache_resource
 def run_query(query):
     """Perform SQL query on the Google Sheet."""
     cursor = st.session_state.conn.cursor()
@@ -67,7 +67,7 @@ def run_query(query):
     return df
 
 
-@st.experimental_singleton
+@st.cache_resource
 def run_query_analysis(query):
     """Perform SQL query on the Google Sheet."""
     cursor = st.session_state.conn.cursor()
@@ -78,7 +78,7 @@ def run_query_analysis(query):
     return df
 
 
-@st.experimental_memo
+@st.cache_data
 def get_df(fn):
     return pd.read_csv(fn)
 
