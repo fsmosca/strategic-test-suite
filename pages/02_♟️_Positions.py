@@ -16,13 +16,14 @@ from modules.constants import (BOARD_MIN_VALUE, BOARD_MAX_VALUE,
                                BOARD_DEFAULT_VALUE, BOARD_STEP)
 
 
-# Updates the state variables on all modules.
-st.session_state.update(st.session_state)
-
-
 # Define session states.
 if 'myconfig' not in st.session_state:
     st.session_state.myconfig = Config()  # instantiate class
+
+st.session_state.myconfig.set_config()
+
+# Updates the state variables on all modules.
+st.session_state.update(st.session_state)
 
 if 'mypos' not in st.session_state:
     st.session_state.mypos = Positions() # instantiate class
@@ -34,17 +35,14 @@ if 'board_size_k' not in st.session_state:
     st.session_state.board_size_k = BOARD_DEFAULT_VALUE
 
 
-st.session_state.myconfig.set_config()
-# st.markdown(myconfig.hide_menu(), unsafe_allow_html=True)
-
-
 def main():
     st.session_state.myconfig.add_logo()
 
     with st.sidebar.expander('Select Table', expanded=True):
         radio_var = st.radio(
             label='Filtered Table',
-            options=['All', 'Reviewed', 'Not yet Reviewed'])
+            options=['All', 'Reviewed', 'Good EPD', 'Bad EPD', 'Not yet Reviewed'],
+            label_visibility='collapsed')
 
     with st.sidebar.expander('Update Table'):
         st.button('Update data', on_click=clear_table_cache, help='Pull new data from google sheet.')
@@ -57,6 +55,7 @@ def main():
             max_value=BOARD_MAX_VALUE,
             value=def_board_size,
             step=BOARD_STEP,
+            label_visibility='collapsed',
             key='board_size_k')
 
     sheet_url = st.secrets["public_gsheets_url"]
@@ -67,18 +66,21 @@ def main():
     query = f'SELECT * FROM "{sheet_analysis}"'
     df_analysis = run_query_analysis(query)
 
+    # df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
+    #           'comment', 'Reviewed_by', 'Replace', 'Duplicate',
+    #           'unix_sec', 'ferdy_sec']]
+    
     df1 = df[['index', 'epd', 'old_bm', 'old_id', 'new_id',
-              'comment', 'Reviewed_by', 'Replace', 'Duplicate',
-              'unix_sec', 'ferdy_sec']]
+              'comment', 'Reviewed_by', 'Replace']]
 
     # Create tabs
     tab1, tab2, tab3 = st.tabs(['Data', 'Theme Names', 'Analysis HW'])
 
     # Data for pie chart.
-    check_count = len(df1.loc[~df1['Reviewed_by'].isna()])
-    not_check_count = len(df1.loc[df1['Reviewed_by'].isna()])
-    prog_df = pd.DataFrame({'cat': ['check', 'not check'],
-                            'value': [check_count, not_check_count]})
+    # check_count = len(df1.loc[~df1['Reviewed_by'].isna()])
+    # not_check_count = len(df1.loc[df1['Reviewed_by'].isna()])
+    # prog_df = pd.DataFrame({'cat': ['check', 'not check'],
+    #                         'value': [check_count, not_check_count]})
 
     with tab1:
 
@@ -86,6 +88,10 @@ def main():
             pass
         elif radio_var == 'Reviewed':
             df1 = df1.loc[~df1['Reviewed_by'].isna()]
+        elif radio_var == 'Good EPD':
+            df1 = df1.loc[df1['Replace'] == 'no']
+        elif radio_var == 'Bad EPD':
+            df1 = df1.loc[df1['Replace'] == 'yes']
         else:
             df1 = df1.loc[df1['Reviewed_by'].isna()]
 
@@ -94,9 +100,9 @@ def main():
 
         cols = st.columns([1, 1])
 
-        if selected_row:
-            epd = selected_row[0]['epd']
-            test_id = selected_row[0]['old_id']
+        if selected_row is not None and len(selected_row):
+            epd = selected_row.iloc[0]['epd']
+            test_id = selected_row.iloc[0]['new_id']
             board = chess.Board(epd)
 
             # Show top analysis from epd.
@@ -107,11 +113,11 @@ def main():
                 df_latest_analysis_1 = df_latest_analysis_1.drop(
                     ['epd', 'move'], axis=1)
                 grid_table_2 = st.session_state.mypos.get_aggrid_table(
-                    df_latest_analysis_1, 350)
+                    df_latest_analysis_1, 320)
 
                 selected_row_2 = grid_table_2["selected_rows"]
-                if selected_row_2:
-                    pv2 = selected_row_2[0]['pv']
+                if selected_row_2 is not None and len(selected_row_2):
+                    pv2 = selected_row_2.iloc[0]['pv']
 
             # Show board.
             with cols[0]:
@@ -122,7 +128,8 @@ def main():
                 game.headers["Result"] = '*'
                 game.headers["FEN"] = fen
 
-                if len(df_latest_analysis_1) and len(selected_row_2):
+                # if len(df_latest_analysis_1) and len(selected_row_2):
+                if df_latest_analysis_1 is not None and len(df_latest_analysis_1) and selected_row_2 is not None and len(selected_row_2):
                     node = game
                     for m in pv2.split():
                         node = node.add_main_variation(chess.Move.from_uci(m))
@@ -146,19 +153,19 @@ def main():
                     Eval stdev: **{epd_stdev}**
                     ''')
 
-        cols = st.columns([1, 1, 1])
+        # cols = st.columns([1, 1, 1])
 
-        with cols[0]:
-            with st.expander('Check Progress', expanded=False):
-                fig = px.pie(prog_df, values='value', names='cat', title='Checking progress',
-                             height=200, width=200)
-                fig.update_layout(
-                    margin=dict(l=20, r=20, t=30, b=0),)
-                st.plotly_chart(fig, use_container_width=True)
+        # with cols[0]:
+        #     with st.expander('Check Progress', expanded=False):
+        #         fig = px.pie(prog_df, values='value', names='cat', title='Checking progress',
+        #                      height=200, width=200)
+        #         fig.update_layout(
+        #             margin=dict(l=20, r=20, t=30, b=0),)
+        #         st.plotly_chart(fig, use_container_width=True)
 
     with tab2:
         df_themes = theme_names()
-        st.dataframe(df_themes)
+        st.dataframe(df_themes, width=300, hide_index=True)
 
     with tab3:
         data_hw = [['unix', 'AMD Ryzen 9 5950x, 16 cores / 32 threads'],
@@ -167,7 +174,7 @@ def main():
         df_hw = pd.DataFrame(data_hw, columns = ['username', 'analysis setting'])
         df_hw = df_hw.sort_values(by=['username'], ascending=[True])
         df_hw = df_hw.reset_index(drop=True)
-        st.dataframe(df_hw)
+        st.dataframe(df_hw, hide_index=True)
 
 
 if __name__ == '__main__':
