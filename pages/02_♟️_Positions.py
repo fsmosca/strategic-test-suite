@@ -41,7 +41,7 @@ def main():
     with st.sidebar.expander('Select Table', expanded=True):
         radio_var = st.radio(
             label='Filtered Table',
-            options=['All', 'Reviewed', 'Good EPD', 'Bad EPD', 'Not yet Reviewed'],
+            options=['All', 'Good EPD', 'Bad EPD'],
             label_visibility='collapsed')
 
     with st.sidebar.expander('Update Table'):
@@ -86,14 +86,10 @@ def main():
 
         if radio_var == 'All':
             pass
-        elif radio_var == 'Reviewed':
-            df1 = df1.loc[~df1['Reviewed_by'].isna()]
         elif radio_var == 'Good EPD':
             df1 = df1.loc[df1['Replace'] == 'no']
         elif radio_var == 'Bad EPD':
             df1 = df1.loc[df1['Replace'] == 'yes']
-        else:
-            df1 = df1.loc[df1['Reviewed_by'].isna()]
 
         grid_table = st.session_state.mypos.get_aggrid_table(df1, 250)
         selected_row = grid_table["selected_rows"]
